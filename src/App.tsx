@@ -70,11 +70,16 @@ function App() {
     const handleClaim = async () => {
         if(current) {
             setLoading(true);
-            const amount = BigInt(current.amount) * (10n ** 18n);
-            const arr = [addr, amount.toString(), 0, current.merkle_index, current.merkle_path_len, ...current.merkle_path];
-            console.log(arr, arr.join(','))
-            const claimData = arr.join(',');
-            const call = contract?.populate("claim", [claimData]);
+            // const amount = BigInt(current.amount) * (10n ** 18n);
+            // const arr = [addr, amount.toString(), 0, current.merkle_index, current.merkle_path_len, ...current.merkle_path];
+            // console.log(arr, arr.join(','))
+            // // const claimData = arr.join(',');
+            const call = contract?.populate("claim", [{
+                identity: current.identity,
+                balance: current.amount,
+                index: current.merkle_index,
+                merkle_path: current.merkle_path,
+            }]);
             console.log(call)
             const res = await contract?.claim(call?.calldata);
             await waitForTransaction(res?.transaction_hash);
