@@ -17,7 +17,6 @@ const urls = new Array(10).fill(0).map((_, i) => {
     return `https://raw.githubusercontent.com/starknet-io/provisions-data/main/starknet/starknet-${i+1}.json`;
 });
 
-const url = 'https://raw.githubusercontent.com/starknet-io/provisions-data/main/starknet/starknet-8.json';
 
 const fetchData = async (addr: string) => {
     let current = null;
@@ -26,7 +25,7 @@ const fetchData = async (addr: string) => {
         const response = await fetch(url);
         const data = await response.json();
 
-        current = data?.eligibles?.find(it => it.identity === addr);
+        current = data?.eligibles?.find((it: any) => it.identity === addr);
         if (current) break;
     }
 
@@ -34,7 +33,6 @@ const fetchData = async (addr: string) => {
 }
 function App() {
     const {address: userAddress, account} = useAccount();
-  const [count, setCount] = useState(0);
   const [address, setAddress] = useState('');
     const {provider} = useProvider();
 
@@ -47,7 +45,6 @@ function App() {
     if(account) {
         contract?.connect(account!)
     }
-  const addr = '0x05c755ba1828c70314349ec4c4ddaf310e648d5773f9bb6c4eb6ce2369288569';
 
   const {data: current, isLoading} = useSWR(address ? ['starknet', address] : null, () => fetchData(address));
 
@@ -108,7 +105,7 @@ function App() {
                        JSON.stringify(current, null, 2)
                    }
                </div>
-               <Button loading={isLoading} onClick={handleClaim} disabled={!current}>Claim</Button>
+               <Button loading={isLoading || loading} onClick={handleClaim} disabled={!current}>Claim</Button>
            </SectionCard>
        </div>
     </>
