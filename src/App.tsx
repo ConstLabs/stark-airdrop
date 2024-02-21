@@ -123,10 +123,10 @@ function App() {
 
 
     return (
-        <>
-            <div className={'container flex justify-between items-center'}>
-                <a href="https://vitejs.dev" target="_blank">
-                    <img src={logo} className="logo" alt="Vite logo"/>
+        <div className={'container'}>
+            <div className={'flex justify-between items-center p-5'}>
+                <a href="https://provisions.starknet.io/" target="_blank">
+                    <img src={logo} className="logo w-8 h-8" alt="logo"/>
                 </a>
                 {userAddress || snapAccount ? <DisconnectModal address={snapAccount?.address || address}/> :
                     <ConnectModal setSnapAccount={setSnapAccount}/>}
@@ -149,7 +149,7 @@ function App() {
                     }} disabled={!current}>Claim</Button>
                 </SectionCard>
             </div>
-        </>
+        </div>
     )
 }
 
