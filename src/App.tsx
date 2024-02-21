@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import {useEffect, useState} from 'react'
 import logo from '/img.png'
 import './App.css'
 import abi from './abi.json';
@@ -22,11 +22,20 @@ const fetchData = async (addr: string) => {
     let current = null;
 
     for (const url of urls) {
+        const index = urls.indexOf(url);
+        toast(`Fetching ${index+1} page data`, {icon: '🔍'})
         const response = await fetch(url);
         const data = await response.json();
+        console.log(data)
 
-        current = data?.eligibles?.find((it: any) => it.identity === addr);
+        current = data?.eligibles?.find((it: any) => it.identity.toLowerCase() === addr.toLowerCase());
         if (current) break;
+    }
+
+    if(current) {
+        toast.success("Data has been found");
+    } else {
+        toast.error("No data found");
     }
 
     return current;
