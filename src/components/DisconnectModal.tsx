@@ -1,12 +1,11 @@
-import { useAccount, useDisconnect } from "@starknet-react/core";
+import { useDisconnect } from "@starknet-react/core";
 import { Button } from "@/components/ui/button";
 import {Dialog, DialogContent, DialogHeader, DialogTrigger} from "@/components/ui/dialog.tsx";
 // import {DropMenus} from "@/components/DropMenu.tsx";
 // import {useNavigate} from "react-router-dom";
 // import {shortenAddress} from "@/utils/common.ts";
 
-export default function DisconnectModal() {
-    const { address } = useAccount();
+export default function DisconnectModal({address}: {address: string}) {
     const { disconnect } = useDisconnect();
 
     const addressShort = address
@@ -17,7 +16,7 @@ export default function DisconnectModal() {
         <div className="justify-end">
             <Dialog>
                 <DialogTrigger asChild>
-                    <Button variant="ghost">{addressShort}</Button>
+                    <Button variant="outline">{addressShort}</Button>
                 </DialogTrigger>
                 <DialogContent>
                     <DialogHeader>Disconnect Wallet</DialogHeader>

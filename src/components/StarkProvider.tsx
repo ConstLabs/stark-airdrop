@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 
-import { mainnet } from "@starknet-react/chains";
+import {mainnet} from "@starknet-react/chains";
 import {
     StarknetConfig,
     publicProvider,
