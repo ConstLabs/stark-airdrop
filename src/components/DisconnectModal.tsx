@@ -1,12 +1,7 @@
-import { useDisconnect } from "@starknet-react/core";
 import { Button } from "@/components/ui/button";
 import {Dialog, DialogContent, DialogHeader, DialogTrigger} from "@/components/ui/dialog.tsx";
-// import {DropMenus} from "@/components/DropMenu.tsx";
-// import {useNavigate} from "react-router-dom";
-// import {shortenAddress} from "@/utils/common.ts";
 
-export default function DisconnectModal({address}: {address: string}) {
-    const { disconnect } = useDisconnect();
+export default function DisconnectModal({address, onDisconnect}: {address: string; onDisconnect: () => void}) {
 
     const addressShort = address
         ? `${address.slice(0, 6)}...${address.slice(-4)}`
@@ -21,7 +16,7 @@ export default function DisconnectModal({address}: {address: string}) {
                 <DialogContent>
                     <DialogHeader>Disconnect Wallet</DialogHeader>
                     <div className="flex flex-col gap-4">
-                        <Button onClick={() => disconnect()}>Disconnect</Button>
+                        <Button onClick={() => onDisconnect()}>Disconnect</Button>
                     </div>
                 </DialogContent>
             </Dialog>
