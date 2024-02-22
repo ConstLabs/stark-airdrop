@@ -8,7 +8,7 @@ import {
     argent,
     braavos,
     useInjectedConnectors,
-    voyager
+    voyager, InjectedConnector
 } from "@starknet-react/core";
 
 export function StarknetProvider({ children }: { children: React.ReactNode }) {
@@ -17,6 +17,9 @@ export function StarknetProvider({ children }: { children: React.ReactNode }) {
         recommended: [
             argent(),
             braavos(),
+            new InjectedConnector({
+                options: {id: "okxwallet"}
+            }),
         ],
         // Hide recommended connectors if the user has any connector installed.
         includeRecommended: "onlyIfNoConnectors",

@@ -42,12 +42,12 @@ export default function ConnectModal({
           </DialogHeader>
           <div className="flex flex-col gap-4">
             {connectors.map((connector: Connector) => (
-              <Button key={connector.id} onClick={() => connect({ connector })} disabled={!connector.available()}>
+              <Button className={'gap-2'} key={connector.id} onClick={() => connect({ connector })} disabled={!connector.available()}>
                 <img src={connector.icon.dark} className="logo w-6 h-6" alt="logo" />
                 Connect {connector.name}
               </Button>
             ))}
-            <Button onClick={connectSnap}>
+            <Button onClick={connectSnap} className={'gap-2'}>
               <img
                 src="https://iconic.dynamic-static-assets.com/icons/sprite.svg#metamask"
                 className="logo w-6 h-6"

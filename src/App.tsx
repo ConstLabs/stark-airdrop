@@ -208,7 +208,7 @@ function App() {
         </a>
         {userAddress || snapAccount ? (
           <DisconnectModal
-            address={snapAccount?.address || address}
+            address={snapAccount?.address || userAddress}
             onDisconnect={() => {
               if (snapAccount) {
                 setSnapAccount(null);
