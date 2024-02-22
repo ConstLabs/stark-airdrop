@@ -126,7 +126,7 @@ function App() {
   const handleSearch = async () => {
     setCurrent(undefined);
     setIsLoading(true);
-    const current = await fetchData(address);
+    const current = await fetchData(address.toLowerCase());
     setCurrent(current);
     setIsLoading(false);
   };
