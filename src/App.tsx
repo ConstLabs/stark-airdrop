@@ -152,10 +152,11 @@ function App() {
     }
     if (current) {
       setLoading(true);
+      const amount = BigInt(current.amount) * 10n ** 18n;
       const call = contract?.populate('claim', [
         {
           identity: current.identity,
-          balance: current.amount,
+          balance: amount.toString(),
           index: current.merkle_index,
           merkle_path: current.merkle_path
         }
