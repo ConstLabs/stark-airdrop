@@ -20,14 +20,19 @@ export default function ConnectModal({
   }
 
   const connectSnap = async () => {
-    await window.ethereum.request({
-      method: 'wallet_requestSnaps',
-      params: {
-        ['npm:@consensys/starknet-snap']: { version: '2.4.0' } //Snap's version
-      }
-    });
+    try {
+      await window.ethereum.request({
+        method: 'wallet_requestSnaps',
+        params: {
+          ['npm:@consensys/starknet-snap']: { version: '2.4.0' } //Snap's version
+        }
+      });
 
-    await getDeployedAccContracts();
+      await getDeployedAccContracts();
+    } catch (e:any) {
+      console.log(e);
+      toast.error(e.message);
+    }
   };
 
   return (
