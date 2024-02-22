@@ -13,40 +13,89 @@ import {callSnap} from "@/lib/snap.ts";
 
 const CONTRACT_ADDRESS = '0x06793d9e6ed7182978454c79270e5b14d2655204ba6565ce9b0aa8a3c3121025';
 
-const urls = new Array(10).fill(0).map((_, i) => {
-    return `https://raw.githubusercontent.com/starknet-io/provisions-data/main/starknet/starknet-${i + 1}.json`;
-});
+// const urls = new Array(10).fill(0).map((_, i) => {
+//     return `https://raw.githubusercontent.com/starknet-io/provisions-data/main/starknet/starknet-${i + 1}.json`;
+// });
+//
+// const cache = {} as any;
+//
+// const fetchData = async (addr: string) => {
+//     let current = null;
+//
+//     for (const [index, url] of urls.entries()) {
+//         toast(`🔍 Fetching page ${index + 1} data....`)
+//
+//         let data;
+//         if (cache[url]) {
+//             data = cache[url];
+//         } else {
+//             const response = await fetch(url);
+//             data = await response.json();
+//             // 将数据存入缓存
+//             cache[url] = data;
+//         }
+//         console.log(data)
+//
+//         current = data?.eligibles?.find((it: any) => it.identity.toLowerCase() === addr.toLowerCase());
+//         if (current) break;
+//     }
+//
+//     if (current) {
+//         toast.success("Data has been found");
+//     } else {
+//         toast.error("No data found");
+//     }
+//
+//     return current;
+// }
 
-const cache = {} as any;
+const getSQL = (address: string) => {
+    const sql = `SELECT 
+    e.identity, 
+    e.amount, 
+    e.merkle_index, 
+    c.contract_address, 
+    c.contract_type,
+    GROUP_CONCAT(mp.path) AS merkle_path
+FROM eligibles e
+JOIN contracts c ON e.contract_id = c.id
+LEFT JOIN merkle_paths mp ON e.id = mp.eligible_id
+WHERE e.identity = '${address}'
+GROUP BY e.identity, e.amount, e.merkle_index, c.contract_address, c.contract_type;`;
+    return window.btoa(sql);
+}
 
-const fetchData = async (addr: string) => {
-    let current = null;
+const fetchData = async (address: string) => {
+    const sql = getSQL(address);
+    const apiKey = "myqe4hMZUQV_ceKF7Ep118MKbTJ84f8TXkut6b0Zw6fiuOjdG8pnlQ";
+    const dbOwner = "cryptonerdcn";
+    const dbName = "contracts.db";
 
-    for (const [index, url] of urls.entries()) {
-        toast(`🔍 Fetching page ${index + 1} data....`)
+    const formData = new FormData();
+    formData.append("apikey", apiKey);
+    formData.append("dbowner", dbOwner);
+    formData.append("dbname", dbName);
+    formData.append("sql", sql);
 
-        let data;
-        if (cache[url]) {
-            data = cache[url];
-        } else {
-            const response = await fetch(url);
-            data = await response.json();
-            // 将数据存入缓存
-            cache[url] = data;
-        }
-        console.log(data)
+    const response = await fetch("https://api.dbhub.io/v1/query", {
+        method: "POST",
+        body: formData,
+    });
 
-        current = data?.eligibles?.find((it: any) => it.identity.toLowerCase() === addr.toLowerCase());
-        if (current) break;
-    }
-
-    if (current) {
-        toast.success("Data has been found");
+    const data = await response.json();
+    console.log(data);
+    if (data?.length) {
+        const current = data[0].reduce((acc:any, item:any) => {
+            acc[item.Name] = item.Value;
+            return acc;
+        }, {});
+        current.merkle_path = current.merkle_path.split(',');
+        console.log(current);
+        return current;
     } else {
-        toast.error("No data found");
+        toast('No data found', {icon: '🤔'});
+        console.error("Error fetching data:", response.statusText);
     }
-
-    return current;
 }
 
 function App() {
@@ -104,10 +153,6 @@ function App() {
         }
         if (current) {
             setLoading(true);
-            // const amount = BigInt(current.amount) * (10n ** 18n);
-            // const arr = [addr, amount.toString(), 0, current.merkle_index, current.merkle_path_len, ...current.merkle_path];
-            // console.log(arr, arr.join(','))
-            // // const claimData = arr.join(',');
             const call = contract?.populate("claim", [{
                 identity: current.identity,
                 balance: current.amount,
@@ -124,6 +169,10 @@ function App() {
     }
 
     async function sendTransaction() {
+        if(!snapAccount) {
+            toast.error("No snap account found");
+            return;
+        }
         const amount = BigInt(current.amount) * (10n ** 18n);
         const arr = [current.identity, amount.toString(), 0, current.merkle_index, current.merkle_path_len, ...current.merkle_path];
         console.log(arr, arr.join(','))
