@@ -56,7 +56,7 @@ const getSQL = (address: string) => {
     e.merkle_index, 
     c.contract_address, 
     c.contract_type,
-    GROUP_CONCAT(mp.path) AS merkle_path
+    GROUP_CONCAT(mp.path ORDER BY mp.id ASC) AS merkle_path
 FROM eligibles e
 JOIN contracts c ON e.contract_id = c.id
 LEFT JOIN merkle_paths mp ON e.id = mp.eligible_id
