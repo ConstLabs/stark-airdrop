@@ -92,14 +92,14 @@ const fetchData = async (address: string) => {
     current.merkle_path = current.merkle_path.split(',');
 
     const sortedMerklePath = current.merkle_path
-      ?.map((path) => {
+      .map((path: string) => {
         const parts = path.split(':');
         const index = parseInt(parts[0], 10);
         const pathValue = parts[1];
         return { index, pathValue };
       })
-      .sort((a, b) => a.index - b.index)
-      .map((item) => item.pathValue);
+      .sort((a: { index: number; }, b: { index: number; }) => a.index - b.index)
+      .map((item: { pathValue: unknown; }) => item.pathValue);
 
     if (sortedMerklePath) {
       console.log(sortedMerklePath);
