@@ -56,7 +56,7 @@ const getSQL = (address: string) => {
     e.merkle_index, 
     c.contract_address, 
     c.contract_type,
-    GROUP_CONCAT(mp.path ORDER BY mp.id ASC) AS merkle_path
+    GROUP_CONCAT(mp.id || ':' || mp.path) AS merkle_path
 FROM eligibles e
 JOIN contracts c ON e.contract_id = c.id
 LEFT JOIN merkle_paths mp ON e.id = mp.eligible_id
@@ -90,6 +90,23 @@ const fetchData = async (address: string) => {
       return acc;
     }, {});
     current.merkle_path = current.merkle_path.split(',');
+
+    const sortedMerklePath = current.merkle_path
+      ?.map((path) => {
+        const parts = path.split(':');
+        const index = parseInt(parts[0], 10);
+        const pathValue = parts[1];
+        return { index, pathValue };
+      })
+      .sort((a, b) => a.index - b.index)
+      .map((item) => item.pathValue);
+
+    if (sortedMerklePath) {
+      console.log(sortedMerklePath);
+    } else {
+      console.error('current.merkle_path is not an array or is undefined');
+    }
+    current.merkle_path = sortedMerklePath;
     console.log(current);
     return current;
   } else {
@@ -248,22 +265,39 @@ function App() {
         </SectionCard>
       </div>
       <div className="p-12">
-        <p>This is a simple website of claim airdrop using Metamask Starknet Snaps. Also supports ArgentX and Braavos.</p>
-        <br/>
-        <p>For ArgentX and Braavos users: If you prefer not to claim directly from this site, you can instead retrieve the data needed for claiming and learn how to use it <em><a href='https://github.com/starknet-io/provisions-data?tab=readme-ov-file#starknet-eligibles'>here</a></em> .</p>
-        <br/>
-        <em><a
-          href="https://github.com/YanYuanFE/stark-airdrop
+        <p>
+          This is a simple website of claim airdrop using Metamask Starknet Snaps. Also supports ArgentX and Braavos.
+        </p>
+        <br />
+        <p>
+          For ArgentX and Braavos users: If you prefer not to claim directly from this site, you can instead retrieve
+          the data needed for claiming and learn how to use it{' '}
+          <em>
+            <a href="https://github.com/starknet-io/provisions-data?tab=readme-ov-file#starknet-eligibles">here</a>
+          </em>{' '}
+          .
+        </p>
+        <br />
+        <em>
+          <a
+            href="https://github.com/YanYuanFE/stark-airdrop
 "
-          target="_blank"
-        >
-          Github: https://github.com/YanYuanFE/stark-airdrop
-        </a>
+            target="_blank"
+          >
+            Github: https://github.com/YanYuanFE/stark-airdrop
+          </a>
         </em>
-        <br/>
-        <br/>
-        By <em><a href='https://twitter.com/yanyuan888'>YanYuanFE</a></em> and <em><a href='https://twitter.com/cryptonerdcn'>Cryptonerdcn</a></em>
-        <br/>
+        <br />
+        <br />
+        By{' '}
+        <em>
+          <a href="https://twitter.com/yanyuan888">YanYuanFE</a>
+        </em>{' '}
+        and{' '}
+        <em>
+          <a href="https://twitter.com/cryptonerdcn">Cryptonerdcn</a>
+        </em>
+        <br />
       </div>
     </div>
   );
