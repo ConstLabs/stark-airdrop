@@ -7,8 +7,8 @@ export const SectionCard = ({title, children, className, extra}: {title?: ReactN
         <Card className={className}>
             {
                 title && (
-                    <CardHeader className={'flex flex-row justify-between items-center'}>
-                        <CardTitle>{title}</CardTitle>
+                    <CardHeader className={'flex flex-row justify-center items-center'}>
+                        <CardTitle className={'text-center'}>{title}</CardTitle>
                         {extra}
                     </CardHeader>
                 )

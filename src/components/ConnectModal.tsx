@@ -24,7 +24,7 @@ export default function ConnectModal({
       await window.ethereum.request({
         method: 'wallet_requestSnaps',
         params: {
-          ['npm:@consensys/starknet-snap']: { version: '2.4.0' } //Snap's version
+          ['npm:@consensys/starknet-snap']: { version: '2.5.2' } //Snap's version
         }
       });
 
