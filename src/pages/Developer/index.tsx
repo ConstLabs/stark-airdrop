@@ -117,7 +117,7 @@ export default function DeveloperAirdrop () {
 
     return (
         <div className={'container pt-10'}>
-            <SectionCard title={'Developer Airdrop Claim'} className={'w-full md:w-1/2 m-auto'}>
+            <SectionCard title={' Astro Early Contributor Airdrop'} className={'w-full md:w-1/2 m-auto'}>
                 {/*<div className="p-2">{JSON.stringify(current, null, 2)}</div>*/}
                 <div className={'py-10'}>
                     <div className={'text-center space-y-2'}>
@@ -139,7 +139,7 @@ export default function DeveloperAirdrop () {
                                 </>
                             ) : <div className={'space-y-2'}>
                                 <div>
-                                    You aren’t eligible
+                                    INPUT ADDRESS TO CHECK
                                 </div>
                                 <div className="flex items-center gap-4">
                                     <Input placeholder={'Input other address check'} value={inputAddress} onChange={(e) => setInputAddress(e.target.value)} />
