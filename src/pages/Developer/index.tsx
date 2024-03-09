@@ -12,7 +12,7 @@ import {callSnap} from "@/lib/snap.ts";
 import {Input} from "@/components/ui/input.tsx";
 import {shortenAddress} from "@/lib/utils.ts";
 
-const CONTRACT_ADDRESS = '0x057d6914b57d0881b786cdafe5123e4eaff96e70c740e957fd4e698707ff50ff';
+const CONTRACT_ADDRESS = '0x063851a31d9e6c0318a3403f579815a5f054f0b3536b1bdd8e935dbba0fe030a';
 
 
 export default function DeveloperAirdrop () {
