@@ -9,12 +9,15 @@ import {useState} from "react";
 import * as Merkle from "starknet-merkle-tree";
 import {SectionCard} from "@/components/SectionCard.tsx";
 import {callSnap} from "@/lib/snap.ts";
+import {Input} from "@/components/ui/input.tsx";
+import {shortenAddress} from "@/lib/utils.ts";
 
 const CONTRACT_ADDRESS = '0x057d6914b57d0881b786cdafe5123e4eaff96e70c740e957fd4e698707ff50ff';
 
 
 export default function DeveloperAirdrop () {
     const { address: userAddress, account } = useAccount();
+    const [inputAddress, setInputAddress] = useState('');
     const { account: snapAccount, } = useSnapAccountStore();
     const { provider } = useProvider();
     const [loading, setLoading] = useState(false);
@@ -31,8 +34,10 @@ export default function DeveloperAirdrop () {
         contract?.connect(account!);
     }
 
+    const claimAddress = inputAddress || userAddress;
+
     const data = treeJSON.values.find(it => {
-        return it.value[0].toLowerCase() === userAddress?.toLowerCase();
+        return it.value[0].toLowerCase() === claimAddress?.toLowerCase();
     });
 
     console.log(data);
@@ -59,12 +64,6 @@ export default function DeveloperAirdrop () {
         console.log('Claiming');
         if (data) {
             setLoading(true);
-            // const amount = BigInt(current.amount) * 10n ** 18n;
-            // {
-            //     account: data.value[0],
-            //         balance: num.hexToDecimalString(data.value[1]),
-            //     proof: tree.getProof(data.value)
-            // }
             console.log([
                 data.value[0],
                 num.hexToDecimalString(data.value[1]),
@@ -118,19 +117,16 @@ export default function DeveloperAirdrop () {
 
     return (
         <div className={'container pt-10'}>
-            <SectionCard title={'Developer Airdrop Claim'} className={'w-1/2 m-auto'}>
-                {/*<div className="flex items-center gap-4">*/}
-                {/*    <Input placeholder={'Address'} value={address} onChange={(e) => setAddress(e.target.value)} />*/}
-                {/*    <Button onClick={handleSearch} disabled={!address}>*/}
-                {/*        Search Claim Data*/}
-                {/*    </Button>*/}
-                {/*</div>*/}
+            <SectionCard title={'Developer Airdrop Claim'} className={'w-full md:w-1/2 m-auto'}>
                 {/*<div className="p-2">{JSON.stringify(current, null, 2)}</div>*/}
                 <div className={'py-10'}>
                     <div className={'text-center space-y-2'}>
                         {
                             data ? (
                                 <>
+                                    <div>
+                                        {shortenAddress(claimAddress!)}
+                                    </div>
                                     <div
                                         className={'font-semibold md:font-medium text-foreground text-center'}>Available
                                         to Claim
@@ -141,8 +137,13 @@ export default function DeveloperAirdrop () {
                                         <span className={'text-gray-500'}>STRK</span>
                                     </div>
                                 </>
-                            ) : <div>
-                                You aren’t eligible
+                            ) : <div className={'space-y-2'}>
+                                <div>
+                                    You aren’t eligible
+                                </div>
+                                <div className="flex items-center gap-4">
+                                    <Input placeholder={'Input other address check'} value={inputAddress} onChange={(e) => setInputAddress(e.target.value)} />
+                                </div>
                             </div>
                         }
                     </div>
