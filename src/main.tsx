@@ -4,6 +4,8 @@ import './index.css'
 import {StarknetProvider} from "@/components/StarkProvider.tsx";
 import {Toaster} from "react-hot-toast";
 import {Router} from "@/Router.tsx";
+import { Analytics } from "@vercel/analytics/react"
+
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -13,5 +15,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
             className: 'toast',
         }}/>
     </StarknetProvider>
+      <Analytics/>
   </React.StrictMode>,
 )
